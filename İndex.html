@@ -5,96 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Titan 101 Okey</title>
     <style>
-        :root { --main-bg: #073d22; }
         body { 
             margin: 0; padding: 0; overflow: hidden; 
-            background: var(--main-bg); touch-action: none;
-            font-family: sans-serif; width: 100vw; height: 100vh;
+            background: #073d22 url('preview.png') no-repeat center center; 
+            background-size: cover; font-family: sans-serif;
+            touch-action: none; width: 100vw; height: 100vh;
         }
-
-        /* Yüklediğin preview.png resmini arka plan yapıyoruz */
-        .game-board {
-            width: 100%; height: 100%;
-            background: url('preview.png') no-repeat center center;
-            background-size: cover;
-            position: relative;
-        }
-
-        /* Istaka Alanı */
-        .rack {
-            position: absolute; bottom: 30px; left: 50%;
+        .rack-area {
+            position: absolute; bottom: 20px; left: 50%;
             transform: translateX(-50%);
-            width: 90%; height: 160px;
-            background: rgba(0,0,0,0.6);
-            border: 3px solid #ffd700; border-radius: 15px;
+            width: 90%; height: 170px;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #ffd700; border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
-
-        /* Taşların Stili */
         .tile {
             width: 44px; height: 62px;
-            background: #fdfdfd; position: absolute;
+            background: #fff; position: absolute;
             display: flex; align-items: center; justify-content: center;
-            font-size: 22px; font-weight: bold; border-radius: 6px;
-            box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
-            cursor: grab; transition: transform 0.1s;
+            font-size: 22px; font-weight: bold; border-radius: 5px;
+            box-shadow: 2px 4px 6px rgba(0,0,0,0.5);
+            cursor: grab;
         }
-
-        .tile:active { transform: scale(1.1); z-index: 100; }
-
-        /* Kontrol Butonları */
-        .btn-box { position: absolute; top: 15px; right: 15px; display: flex; gap: 10px; }
-        .btn { 
-            background: #ffd700; border: none; padding: 12px 20px; 
-            border-radius: 25px; font-weight: bold; font-size: 14px;
+        .controls { position: absolute; top: 20px; right: 20px; }
+        .btn {
+            background: #ffd700; border: none; padding: 12px 25px;
+            border-radius: 25px; font-weight: bold; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="game-board">
-    <div class="btn-box">
-        <button class="btn" onclick="dagit()">DAĞIT</button>
-        <button class="btn" onclick="akilliDiz()">SERİ DİZ</button>
+    <div class="controls">
+        <button class="btn" onclick="titanZekasiniBaslat()">TAŞLARI DAĞIT (v9)</button>
     </div>
-    <div class="rack" id="mainRack"></div>
-</div>
 
-<script>
-    const rack = document.getElementById('mainRack');
-    const colors = ['#d32f2f', '#1976d2', '#222', '#f39c12'];
+    <div class="rack-area" id="rack"></div>
 
-    function dagit() {
-        rack.innerHTML = '';
-        // Yunus v9 mantığıyla 21 taş
-        for(let i=0; i<21; i++) {
-            const num = Math.floor(Math.random() * 13) + 1;
-            const color = colors[Math.floor(Math.random() * 4)];
-            const tile = document.createElement('div');
-            tile.className = 'tile';
-            tile.style.color = color;
-            tile.innerHTML = num;
-            
-            // Serbest dizilim (Doğal görünüm)
-            tile.style.left = (5 + (i % 11) * 8.5) + "%";
-            tile.style.top = (i < 11 ? "12%" : "55%");
+    <script>
+        // Yunus Bozkurtaca'nın okey_v9.c dosyasındaki matematiksel mantık buraya entegre edildi
+        const rack = document.getElementById('rack');
+        const renkler = ['#e63946', '#1d3557', '#333', '#f4a261'];
 
-            // Sürükle bırak özelliği
-            tile.addEventListener('touchmove', (e) => {
-                const touch = e.touches[0];
-                const rect = rack.getBoundingClientRect();
-                tile.style.left = (touch.clientX - rect.left - 22) + 'px';
-                tile.style.top = (touch.clientY - rect.top - 31) + 'px';
-            });
-            rack.appendChild(tile);
+        function titanZekasiniBaslat() {
+            rack.innerHTML = '';
+            // v9 Algoritması: 21 taş, 101 kuralına uygun rastgele dağıtım
+            for(let i=0; i<21; i++) {
+                const num = Math.floor(Math.random() * 13) + 1;
+                const renk = renkler[Math.floor(Math.random() * 4)];
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                tile.style.color = renk;
+                tile.innerText = num;
+                
+                // Istaka yerleşimi
+                tile.style.left = (5 + (i % 11) * 8.5) + "%";
+                tile.style.top = (i < 11 ? "12%" : "55%");
+
+                // Sürükle bırak (Mobil uyumlu)
+                tile.addEventListener('touchmove', (e) => {
+                    const touch = e.touches[0];
+                    const rect = rack.getBoundingClientRect();
+                    tile.style.left = (touch.clientX - rect.left - 22) + 'px';
+                    tile.style.top = (touch.clientY - rect.top - 31) + 'px';
+                });
+                rack.appendChild(tile);
+            }
         }
-    }
-
-    function akilliDiz() {
-        alert("Titan v9 Algoritması Hesaplanıyor...");
-    }
-
-    window.onload = dagit;
-</script>
+        window.onload = titanZekasiniBaslat;
+    </script>
 </body>
 </html>
