@@ -3,80 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>101 Titanik - v1.0</title>
+    <title>101 Titanik - v1.5 Pro</title>
     <style>
-        body { background-color: #001a33; color: white; font-family: sans-serif; margin: 0; overflow: hidden; }
-        #game-table { 
-            width: 100vw; height: 100vh; 
-            background: radial-gradient(circle, #004d4d 0%, #001a1a 100%); 
-            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-        }
-        .header { width: 100%; padding: 5px; display: flex; justify-content: space-between; background: rgba(0,0,0,0.7); font-size: 12px; }
+        body { background-color: #001a33; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; }
         
-        /* 4 Kişilik Masa Düzeni */
-        .player-slot { width: 80px; height: 80px; background: rgba(0,0,0,0.3); border: 1px solid #ffcc00; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; }
-        .middle-area { display: flex; width: 100%; justify-content: space-around; align-items: center; flex-grow: 1; }
-        
-        /* Istaka ve Butonlar */
-        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; width: 95%; margin-bottom: 5px; }
-        button { background: linear-gradient(#444, #222); color: #ffcc00; border: 1px solid #ffcc00; padding: 8px; border-radius: 5px; font-weight: bold; font-size: 12px; }
-        
-        .istaka { 
-            width: 95%; height: 110px; background: #3d2616; border: 3px solid #5d3a22; 
-            border-radius: 8px; margin-bottom: 10px; display: grid; 
-            grid-template-columns: repeat(11, 1fr); gap: 2px; padding: 4px;
-        }
-        .tas { background: #fdfdfd; color: black; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-weight: bold; border-bottom: 2px solid #ccc; font-size: 16px; }
+        /* LOBİ VE MENÜ */
+        #lobby { position: fixed; width: 100%; height: 100%; background: radial-gradient(circle, #002b55 0%, #000 100%); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .lobby-btn { width: 85%; margin: 10px; padding: 20px; border-radius: 15px; border: 2px solid #ffcc00; font-weight: bold; font-size: 18px; cursor: pointer; transition: 0.3s; }
+        .tekli { background: #1976d2; color: white; }
+        .esli { background: #388e3c; color: white; }
+        .vip { background: linear-gradient(#ffcc00, #aa8800); color: black; }
+
+        /* OYUN MASASI */
+        #game-table { width: 100vw; height: 100vh; background: radial-gradient(circle, #004d4d 0%, #001111 100%); display: none; flex-direction: column; align-items: center; }
+        .header { width: 100%; display: flex; justify-content: space-around; background: rgba(0,0,0,0.8); padding: 8px; border-bottom: 2px solid #ffcc00; font-size: 12px; }
+        .board-area { width: 92%; flex-grow: 1; margin: 5px 0; display: grid; grid-template-columns: repeat(11, 1fr); grid-template-rows: repeat(7, 1fr); gap: 1px; background: rgba(255,255,255,0.05); border: 1px solid #006666; border-radius: 8px; box-shadow: inset 0 0 15px #000; }
+        .board-slot { border: 0.1px solid rgba(255,255,255,0.05); }
+
+        /* TAŞLAR VE ISTAKA */
+        .istaka { width: 96%; height: 110px; background: #2b1d0e; border: 4px solid #4a3219; border-radius: 10px; margin-bottom: 10px; display: grid; grid-template-columns: repeat(11, 1fr); gap: 3px; padding: 5px; }
+        .tas { background: #fdfdfd; color: black; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; box-shadow: 0 3px 0 #bbb; position: relative; }
+        .tas::after { content: "🚢"; font-size: 9px; opacity: 0.2; position: absolute; bottom: 1px; }
+
+        /* MARKET VE REKLAM */
+        #market { display: none; position: fixed; top: 10%; left: 5%; width: 90%; height: 80%; background: rgba(0,0,0,0.95); border: 2px solid #ffcc00; z-index: 3000; border-radius: 20px; padding: 15px; text-align: center; }
     </style>
 </head>
 <body>
 
+<div id="lobby">
+    <h1 style="color:#ffcc00; margin-bottom:30px;">⚓ 101 TİTANİK</h1>
+    <button class="lobby-btn tekli" onclick="oyunaGiris('tekli')">👤 TEKLİ MASA</button>
+    <button class="lobby-btn esli" onclick="oyunaGiris('esli')">👥 EŞLİ MASA</button>
+    <button class="lobby-btn vip" onclick="marketAc()">👑 VIP SALON / ÇİP AL</button>
+</div>
+
+<div id="market">
+    <h2 style="color:#ffcc00;">KAPTANIN KASASI</h2>
+    <div style="background:#111; padding:15px; border-radius:10px; border:1px dashed #00ff00; margin-bottom:20px;">
+        <p>Reklam İzle, Ücretsiz 5.000 Çip Kap!</p>
+        <button onclick="reklamIzle()" style="background:#006600; color:white; padding:10px; width:100%;">📽️ REKLAM İZLE</button>
+    </div>
+    <button onclick="marketKapat()" style="background:#600; color:white; padding:10px; width:100%;">KAPAT</button>
+</div>
+
 <div id="game-table">
     <div class="header">
-        <div class="logo">🚢 101 TİTANİK</div>
-        <div class="player-slot"><span>Selim</span><br><span>Puan: 0</span></div>
-        <div id="balance">KAZANÇ: 0.00 TL</div>
+        <span id="mod-text">MOD: TEKLİ</span>
+        <span style="color:#ffcc00;">KAZANÇ: <span id="balance">0</span> ÇİP</span>
+        <button onclick="marketAc()" style="background:#aa8800; border:none; border-radius:5px; font-size:10px;">MARKET</button>
     </div>
-
-    <div class="middle-area">
-        <div class="player-slot"><span>Ömer</span><br><span>Puan: 0</span></div>
-        <div id="center-deck" style="text-align:center;">
-            <div style="font-size:30px;">🎴</div>
-            <button onclick="tasAl()">TAŞ AL</button>
-        </div>
-        <div class="player-slot"><span>Aleyna</span><br><span>Puan: 0</span></div>
-    </div>
-
-    <div class="controls">
+    <div class="board-area" id="board"></div>
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:5px; width:95%; margin-bottom:5px;">
         <button onclick="seriAc()">SERİ AÇ</button>
         <button onclick="ciftAc()">ÇİFT AÇ</button>
+        <button onclick="tasAl()">TAŞ AL</button>
         <button onclick="tasAt()">TAŞ AT</button>
-        <button onclick="islerAt()">İŞLER AT</button>
-        <button onclick="geriTopla()" style="grid-column: span 2; background: #600;">GERİ TOPLA / CEZA</button>
+        <button onclick="seriDiz()">SERİ DİZ</button>
+        <button style="background:#600; color:white;">CEZA</button>
     </div>
-
     <div class="istaka" id="istaka"></div>
 </div>
 
 <script>
-    function tasAl() { alert("Yerden taş alındı."); }
-    function seriAc() { alert("101 Sayısı Kontrol Ediliyor..."); }
-    function ciftAc() { alert("5 Çift Kontrol Ediliyor..."); }
-    function tasAt() { alert("Lütfen atılacak taşı seçin."); }
-    function islerAt() { alert("İşler taşlar masaya dağıtılıyor..."); }
-    function geriTopla() { alert("Hatalı el! Taşlar toplanıyor ve 101 ceza eklendi."); }
+    let cips = 0;
+    const board = document.getElementById('board');
+    for(let i=0; i<77; i++) board.innerHTML += '<div class="board-slot"></div>';
+
+    function oyunaGiris(mod) {
+        document.getElementById('lobby').style.display = 'none';
+        document.getElementById('game-table').style.display = 'flex';
+        document.getElementById('mod-text').innerText = "MOD: " + mod.toUpperCase();
+        dagit();
+    }
+
+    function marketAc() { document.getElementById('market').style.display = 'block'; }
+    function marketKapat() { document.getElementById('market').style.display = 'none'; }
+
+    function reklamIzle() {
+        alert("Reklam oynatılıyor... (+5000 Çip)");
+        cips += 5000;
+        document.getElementById('balance').innerText = cips;
+        marketKapat();
+    }
 
     function dagit() {
         const istaka = document.getElementById('istaka');
         istaka.innerHTML = '';
+        const colors = ['#d32f2f', '#1976d2', '#212121', '#f57c00'];
         for(let i=0; i<22; i++) {
             let num = Math.floor(Math.random() * 13) + 1;
-            let colors = ['red', 'blue', 'black', 'orange'];
             let color = colors[Math.floor(Math.random() * colors.length)];
             istaka.innerHTML += `<div class="tas" style="color:${color}">${num}</div>`;
         }
     }
-    dagit();
+    // Temel buton fonksiyonları (Yarın içleri dolacak)
+    function seriAc() { alert("101 Kontrolü yapılıyor..."); }
+    function ciftAc() { alert("Çift Kontrolü yapılıyor..."); }
+    function tasAl() { alert("Yerden taş çektin."); }
+    function tasAt() { alert("Taş yere atıldı."); }
+    function seriDiz() { alert("Taşlar otomatik diziliyor..."); dagit(); }
 </script>
 
 </body>
