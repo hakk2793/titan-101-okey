@@ -3,107 +3,648 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>101 Titanik - v1.5 Pro</title>
+    <title>101 Titanik - Efsane Başlıyor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #001a33; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; }
-        
-        /* LOBİ VE MENÜ */
-        #lobby { position: fixed; width: 100%; height: 100%; background: radial-gradient(circle, #002b55 0%, #000 100%); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .lobby-btn { width: 85%; margin: 10px; padding: 20px; border-radius: 15px; border: 2px solid #ffcc00; font-weight: bold; font-size: 18px; cursor: pointer; transition: 0.3s; }
-        .tekli { background: #1976d2; color: white; }
-        .esli { background: #388e3c; color: white; }
-        .vip { background: linear-gradient(#ffcc00, #aa8800); color: black; }
+        :root {
+            --primary-blue: #003366;
+            --secondary-gold: #FFD700;
+            --button-blue: #1976D2;
+            --button-green: #388E3C;
+            --dark-bg: #001a33;
+            --light-bg: #E0F2F7;
+            --text-color: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color);
+            background-color: var(--dark-bg);
+        }
+
+        /* GENEL EKLEMELER */
+        .full-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.8s ease-in-out;
+            z-index: 100;
+        }
+
+        .hidden { display: none !important; }
+
+        /* BAŞLANGIÇ EKRANI (TİTANİK GEMİSİ) */
+        #splash-screen {
+            background-image: url('https://i.hizliresim.com/6j0f47e.jpg'); /* Buraya Titanik gemisi görseli gelecek */
+            animation: fadeIn 2s forwards;
+            position: relative;
+        }
+        #splash-screen::before { /* Gece efekti */
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1;
+        }
+        .splash-content {
+            z-index: 2;
+            text-align: center;
+        }
+        .splash-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3em;
+            color: var(--secondary-gold);
+            text-shadow: 0 0 15px rgba(255,255,255,0.7), 0 0 30px var(--primary-blue);
+            margin-bottom: 20px;
+        }
+        .login-buttons button {
+            background-color: rgba(255,255,255,0.2);
+            border: 2px solid var(--secondary-gold);
+            color: var(--text-color);
+            padding: 12px 30px;
+            margin: 8px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .login-buttons button:hover {
+            background-color: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        /* LOBİ EKRANI (İSTANBUL MANZARASI) */
+        #lobby-screen {
+            background-image: url('https://i.hizliresim.com/t1h521d.jpg'); /* Buraya İstanbul Boğazı manzarası gelecek */
+            justify-content: flex-start; /* Butonları yukarı hizala */
+            padding-top: 50px;
+        }
+        .lobby-header {
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 0.9em;
+        }
+        .lobby-header div {
+            display: flex;
+            align-items: center;
+        }
+        .lobby-header img {
+            width: 24px; height: 24px; margin-right: 5px;
+        }
+        .room-selection-container {
+            display: flex;
+            flex-wrap: wrap; /* Taşma olursa alta geçsin */
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(0,0,0,0.6); /* Hafif arka plan */
+            border-radius: 15px;
+            width: 90%;
+            max-width: 900px; /* Geniş ekranlarda çok büyümesin */
+            max-height: 70%; /* Yüksekliği sınırlayalım */
+            overflow-y: auto; /* Kaydırma çubuğu çıksın */
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            margin-top: 20px; /* Header ile arayı açalım */
+        }
+        .room-card {
+            background: linear-gradient(145deg, #2b3a50, #1a2736);
+            border: 2px solid var(--secondary-gold);
+            border-radius: 15px;
+            padding: 15px;
+            width: 150px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            position: relative; /* Badge için */
+        }
+        .room-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        }
+        .room-card h3 {
+            color: var(--secondary-gold);
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+        .room-card .bet-amount {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #00ff00;
+            margin: 10px 0;
+        }
+        .room-card .player-count {
+            font-size: 0.9em;
+            color: #ccc;
+        }
+        .room-card .min-chip {
+            font-size: 0.8em;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        .room-card .room-badge { /* Yeni, Hot gibi etiketler */
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #E91E63;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .lobby-buttons {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 80%;
+            max-width: 400px;
+        }
+        .lobby-buttons button {
+            background: var(--button-blue);
+            color: var(--text-color);
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .lobby-buttons button:hover {
+            background: var(--button-green);
+            transform: translateY(-2px);
+        }
+
+        /* MARKET EKRANI (ÇİP, ELMAS, ÜRÜN, KUPON) */
+        #market-screen {
+            background-image: url('https://i.hizliresim.com/o03g9k6.jpg'); /* İstanbul Boğazı arka planı */
+            justify-content: flex-start;
+            padding-top: 20px;
+        }
+        #market-screen::before { /* Hafif karartma */
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1;
+        }
+        .market-content {
+            z-index: 2;
+            width: 95%;
+            max-width: 900px;
+            height: 90%;
+            background: rgba(0,0,0,0.8);
+            border-radius: 15px;
+            border: 2px solid var(--secondary-gold);
+            display: flex;
+            overflow: hidden;
+        }
+        .market-nav {
+            width: 150px;
+            background: rgba(0,0,0,0.5);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        }
+        .market-nav button {
+            display: block;
+            width: 100%;
+            padding: 15px 10px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.1em;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .market-nav button.active, .market-nav button:hover {
+            background: var(--button-blue);
+            color: var(--secondary-gold);
+        }
+        .market-main {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .market-category {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        .market-category.active { display: grid; }
+        .market-item {
+            background: linear-gradient(145deg, #3a4b60, #2a3b4e);
+            border: 1px solid #4a5b70;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .market-item h4 { margin: 5px 0; color: #fff; }
+        .market-item p { font-size: 0.9em; color: #ccc; }
+        .market-item .price-btn {
+            background: var(--button-green);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .market-item .badge { /* EN AVANTAJLI, EN POPÜLER */
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #E91E63;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
 
         /* OYUN MASASI */
-        #game-table { width: 100vw; height: 100vh; background: radial-gradient(circle, #004d4d 0%, #001111 100%); display: none; flex-direction: column; align-items: center; }
-        .header { width: 100%; display: flex; justify-content: space-around; background: rgba(0,0,0,0.8); padding: 8px; border-bottom: 2px solid #ffcc00; font-size: 12px; }
-        .board-area { width: 92%; flex-grow: 1; margin: 5px 0; display: grid; grid-template-columns: repeat(11, 1fr); grid-template-rows: repeat(7, 1fr); gap: 1px; background: rgba(255,255,255,0.05); border: 1px solid #006666; border-radius: 8px; box-shadow: inset 0 0 15px #000; }
-        .board-slot { border: 0.1px solid rgba(255,255,255,0.05); }
+        #game-table {
+            background: radial-gradient(circle, #004d4d 0%, #001111 100%);
+            display: none; /* Lobi açılınca aktif olacak */
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.8);
+            padding: 8px;
+            border-bottom: 2px solid var(--secondary-gold);
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+        .board-area {
+            width: 96%;
+            flex-grow: 1;
+            margin: 5px 0;
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            grid-template-rows: repeat(7, 1fr);
+            gap: 1px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #006666;
+            border-radius: 8px;
+            box-shadow: inset 0 0 15px #000;
+        }
+        .board-slot {
+            border: 0.1px solid rgba(255,255,255,0.05);
+            display: flex; /* Taşları ortalamak için */
+            justify-content: center;
+            align-items: center;
+        }
+        .istaka {
+            width: 96%;
+            height: 110px;
+            background: #2b1d0e;
+            border: 4px solid #4a3219;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex; /* Taşlar yan yana dizilecek */
+            gap: 3px;
+            padding: 5px;
+            overflow-x: auto; /* Taşarsa kaydırma çubuğu */
+            -webkit-overflow-scrolling: touch; /* iOS için yumuşak kaydırma */
+        }
+        .tas {
+            background: #fdfdfd;
+            color: black;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            box-shadow: 0 3px 0 #bbb, 2px 4px 5px rgba(0,0,0,0.4);
+            position: relative;
+            flex-shrink: 0; /* Taşların küçülmesini engelle */
+            width: 40px; /* Sabit taş genişliği */
+            height: 55px; /* Sabit taş yüksekliği */
+            margin: 2px;
+            cursor: grab;
+        }
+        .tas::after {
+            content: "🚢";
+            font-size: 9px;
+            opacity: 0.2;
+            position: absolute;
+            bottom: 1px;
+        }
+        .tas-red { color: #d32f2f !important; text-shadow: 0.5px 0.5px 0px #000; }
+        .tas-blue { color: #1976d2 !important; text-shadow: 0.5px 0.5px 0px #000; }
+        .tas-black { color: #212121 !important; }
+        .tas-orange { color: #f57c00 !important; text-shadow: 0.5px 0.5px 0px #000; }
 
-        /* TAŞLAR VE ISTAKA */
-        .istaka { width: 96%; height: 110px; background: #2b1d0e; border: 4px solid #4a3219; border-radius: 10px; margin-bottom: 10px; display: grid; grid-template-columns: repeat(11, 1fr); gap: 3px; padding: 5px; }
-        .tas { background: #fdfdfd; color: black; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; box-shadow: 0 3px 0 #bbb; position: relative; }
-        .tas::after { content: "🚢"; font-size: 9px; opacity: 0.2; position: absolute; bottom: 1px; }
+        .game-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            width: 95%;
+            margin-bottom: 5px;
+        }
+        .game-controls button {
+            background: var(--button-blue);
+            color: var(--text-color);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .game-controls button.danger { background: #D32F2F; }
 
-        /* MARKET VE REKLAM */
-        #market { display: none; position: fixed; top: 10%; left: 5%; width: 90%; height: 80%; background: rgba(0,0,0,0.95); border: 2px solid #ffcc00; z-index: 3000; border-radius: 20px; padding: 15px; text-align: center; }
+        /* GÜNLÜK BONUS EKRANI */
+        #daily-bonus-screen {
+            background: rgba(0,0,0,0.9);
+            z-index: 4000;
+        }
+        .bonus-box {
+            background: linear-gradient(145deg, #2b3a50, #1a2736);
+            border: 3px solid var(--secondary-gold);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            width: 90%;
+            max-width: 600px;
+        }
+        .bonus-box h2 {
+            color: var(--secondary-gold);
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .bonus-days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .bonus-day {
+            background: var(--primary-blue);
+            border: 1px solid var(--secondary-gold);
+            border-radius: 10px;
+            padding: 10px;
+            color: white;
+        }
+        .bonus-day.claimed {
+            background: #008800; /* Alınan bonus */
+        }
+        .bonus-day.current {
+            background: #E91E63; /* Bugünün bonusu */
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #E91E63;
+        }
+        .collect-bonus-btn {
+            background: var(--button-green);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* ANİMASYONLAR */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
-<div id="lobby">
-    <h1 style="color:#ffcc00; margin-bottom:30px;">⚓ 101 TİTANİK</h1>
-    <button class="lobby-btn tekli" onclick="oyunaGiris('tekli')">👤 TEKLİ MASA</button>
-    <button class="lobby-btn esli" onclick="oyunaGiris('esli')">👥 EŞLİ MASA</button>
-    <button class="lobby-btn vip" onclick="marketAc()">👑 VIP SALON / ÇİP AL</button>
-</div>
-
-<div id="market">
-    <h2 style="color:#ffcc00;">KAPTANIN KASASI</h2>
-    <div style="background:#111; padding:15px; border-radius:10px; border:1px dashed #00ff00; margin-bottom:20px;">
-        <p>Reklam İzle, Ücretsiz 5.000 Çip Kap!</p>
-        <button onclick="reklamIzle()" style="background:#006600; color:white; padding:10px; width:100%;">📽️ REKLAM İZLE</button>
+    <div id="splash-screen" class="full-screen">
+        <div class="splash-content">
+            <h1 class="splash-title">101 TİTANİK</h1>
+            <p style="color:white; font-size:1.1em; margin-bottom:30px; text-shadow: 0 0 5px black;">Efsaneler Okyanusunda Yerinizi Alın!</p>
+            <div class="login-buttons">
+                <button onclick="loginWith('facebook')">Facebook ile Giriş Yap</button>
+                <button onclick="loginWith('google')">Google ile Giriş Yap</button>
+                <button onclick="loginWith('guest')">Misafir Girişi</button>
+            </div>
+        </div>
     </div>
-    <button onclick="marketKapat()" style="background:#600; color:white; padding:10px; width:100%;">KAPAT</button>
-</div>
 
-<div id="game-table">
-    <div class="header">
-        <span id="mod-text">MOD: TEKLİ</span>
-        <span style="color:#ffcc00;">KAZANÇ: <span id="balance">0</span> ÇİP</span>
-        <button onclick="marketAc()" style="background:#aa8800; border:none; border-radius:5px; font-size:10px;">MARKET</button>
+    <div id="lobby-screen" class="full-screen hidden">
+        <div class="lobby-header">
+            <div><img src="https://via.placeholder.com/24/FFD700/000000?text=C" alt="Chip Icon"> <span id="lobby-chips">250.000</span></div>
+            <div><img src="https://via.placeholder.com/24/1E90FF/FFFFFF?text=D" alt="Diamond Icon"> <span id="lobby-diamonds">17</span></div>
+            <div><img src="https://via.placeholder.com/24/E91E63/FFFFFF?text=VIP" alt="VIP Icon"> <span id="lobby-vip">VIP0 (125/500)</span></div>
+            <button style="background:none; border:none; color:var(--secondary-gold); font-size:1.5em;" onclick="marketAc()">🛒</button>
+        </div>
+
+        <h2 style="color:var(--secondary-gold); text-shadow: 0 0 10px rgba(0,0,0,0.7);">ODA SEÇİNİZ</h2>
+        
+        <div class="room-selection-container">
+            </div>
+
+        <div class="lobby-buttons">
+            <button onclick="hizliBaslat()">🚀 HIZLI BAŞLAT</button>
+        </div>
     </div>
-    <div class="board-area" id="board"></div>
-    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:5px; width:95%; margin-bottom:5px;">
-        <button onclick="seriAc()">SERİ AÇ</button>
-        <button onclick="ciftAc()">ÇİFT AÇ</button>
-        <button onclick="tasAl()">TAŞ AL</button>
-        <button onclick="tasAt()">TAŞ AT</button>
-        <button onclick="seriDiz()">SERİ DİZ</button>
-        <button style="background:#600; color:white;">CEZA</button>
-    </div>
-    <div class="istaka" id="istaka"></div>
-</div>
 
-<script>
-    let cips = 0;
-    const board = document.getElementById('board');
-    for(let i=0; i<77; i++) board.innerHTML += '<div class="board-slot"></div>';
+    <div id="market-screen" class="full-screen hidden">
+        <div class="market-content">
+            <div class="market-nav">
+                <button class="active" data-category="chips">ÇİP</button>
+                <button data-category="diamonds">ELMAS</button>
+                <button data-category="products">ÜRÜN</button>
+                <button data-category="coupons">KUPON</button>
+                <button onclick="reklamIzle()">📽️ REKLAM İZLE</button>
+            </div>
+            <div class="market-main">
+                <div id="market-chips" class="market-category active">
+                    <div class="market-item"><span class="badge">EN AVANTAJLI</span><h4>3.040M Çip</h4><p>3999,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>1.900M Çip</h4><p>2499,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>1.250M Çip</h4><p>1799,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>750M Çip</h4><p>1299,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><span class="badge">EN POPÜLER</span><h4>325M Çip</h4><p>599,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>140M Çip</h4><p>349,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>48M Çip</h4><p>149,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>4M Çip</h4><p>39,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                </div>
+                <div id="market-diamonds" class="market-category">
+                    <div class="market-item"><span class="badge">BÜYÜK ELMAS</span><h4>40.000 Elmas</h4><p>3999,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>30.000 Elmas</h4><p>2999,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>20.000 Elmas</h4><p>1999,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>15.000 Elmas</h4><p>1499,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>8.000 Elmas</h4><p>799,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>4.000 Elmas</h4><p>399,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>2.000 Elmas</h4><p>199,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                    <div class="market-item"><h4>400 Elmas</h4><p>39,99 TL</p><button class="price-btn">SATIN AL</button></div>
+                </div>
+                <div id="market-products" class="market-category">
+                    <div class="market-item"><h4>Megafon</h4><p>100 Elmas</p><button class="price-btn">AL</button></div>
+                    <div class="market-item"><h4>Megafon x10</h4><p>900 Elmas</p><button class="price-btn">AL</button></div>
+                    <div class="market-item"><h4>Emoji (7.Gün)</h4><p>70 Elmas</p><button class="price-btn">AL</button></div>
+                    <div class="market-item"><h4>Emoji (30.Gün)</h4><p>199 Elmas</p><button class="price-btn">AL</button></div>
+                </div>
+                <div id="market-coupons" class="market-category">
+                    <div class="market-item"><h4>500 Elmas</h4><p>x100 Kupon</p><button class="price-btn">AL</button></div>
+    <script>
+    // --- GLOBAL DEĞİŞKENLER VE AYARLAR ---
+    let currentChips = 250000;
+    let currentDiamonds = 17;
+    let currentVipLevel = 0;
+    let vipPoints = 125;
+    const vipThreshold = 500;
+    
+    // Oda Listesi (Görsellerdeki gibi kademeli)
+    const rooms = [
+        { name: "Acemi", bet: 20000, min: 100000, players: 452, badge: "Yeni" },
+        { name: "Kalfa", bet: 100000, min: 500000, players: 1240, badge: "Popüler" },
+        { name: "Usta", bet: 500000, min: 2500000, players: 850, badge: "Sıcak" },
+        { name: "Şampiyon", bet: 2500000, min: 12500000, players: 320, badge: "VIP" },
+        { name: "Efsane", bet: 10000000, min: 50000000, players: 98, badge: "Kral" }
+    ];
 
-    function oyunaGiris(mod) {
-        document.getElementById('lobby').style.display = 'none';
-        document.getElementById('game-table').style.display = 'flex';
-        document.getElementById('mod-text').innerText = "MOD: " + mod.toUpperCase();
-        dagit();
+    // --- EKRAN GEÇİŞLERİ ---
+    function showScreen(screenId) {
+        document.querySelectorAll('.full-screen').forEach(s => s.classList.add('hidden'));
+        document.getElementById(screenId).classList.remove('hidden');
     }
 
-    function marketAc() { document.getElementById('market').style.display = 'block'; }
-    function marketKapat() { document.getElementById('market').style.display = 'none'; }
+    // --- GİRİŞ SİSTEMİ ---
+    function loginWith(method) {
+        console.log(method + " ile bağlanıldı.");
+        // Önce bonusu göster, sonra lobiye al
+        bonusEkraniAc();
+    }
+
+    // --- LOBİ VE ODA YÖNETİMİ ---
+    function lobiDoldur() {
+        const container = document.querySelector('.room-selection-container');
+        container.innerHTML = '';
+        rooms.forEach(room => {
+            container.innerHTML += `
+                <div class="room-card" onclick="oyunBaslat('${room.name}', ${room.bet})">
+                    <span class="room-badge">${room.badge}</span>
+                    <h3>${room.name}</h3>
+                    <div class="bet-amount">${formatNumber(room.bet)}</div>
+                    <div class="player-count">👤 ${room.players}</div>
+                    <div class="min-chip">Min: ${formatNumber(room.min)}</div>
+                </div>`;
+        });
+        showScreen('lobby-screen');
+    }
+
+    // --- MARKET VE REKLAM ---
+    function marketAc() { showScreen('market-screen'); }
+    function marketKapat() { showScreen('lobby-screen'); }
+
+    // Market sekmeleri arası geçiş
+    document.querySelectorAll('.market-nav button[data-category]').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.market-nav button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.market-category').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('market-' + btn.dataset.category).classList.add('active');
+        };
+    });
 
     function reklamIzle() {
-        alert("Reklam oynatılıyor... (+5000 Çip)");
-        cips += 5000;
-        document.getElementById('balance').innerText = cips;
-        marketKapat();
+        alert("📽️ Reklam oynatılıyor... (+10.000 Çip)");
+        currentChips += 10000;
+        updateUI();
+        alert("Tebrikler kaptan! Kasan doldu.");
     }
 
-    function dagit() {
+    // --- BONUS SİSTEMİ ---
+    function bonusEkraniAc() {
+        const grid = document.getElementById('bonus-grid');
+        grid.innerHTML = '';
+        for(let i=1; i<=7; i++) {
+            grid.innerHTML += `
+                <div class="bonus-day ${i===1 ? 'current' : ''}">
+                    Gün ${i}<br>🎁<br>${i*5000}
+                </div>`;
+        }
+        showScreen('daily-bonus-screen');
+    }
+
+    function collectDailyBonus() {
+        currentChips += 5000;
+        updateUI();
+        lobiDoldur(); // Bonus alınca lobiye geç
+    }
+
+    // --- OYUN MASASI MANTIĞI ---
+    function oyunBaslat(odaAdi, bahis) {
+        if(currentChips < bahis) {
+            alert("Kaptan, bu masaya girmek için çipin yetersiz!");
+            marketAc();
+            return;
+        }
+        document.getElementById('game-mode').innerText = odaAdi + " Masası";
+        taslariDagit();
+        showScreen('game-table');
+    }
+
+    function taslariDagit() {
         const istaka = document.getElementById('istaka');
         istaka.innerHTML = '';
-        const colors = ['#d32f2f', '#1976d2', '#212121', '#f57c00'];
+        const colors = ['tas-red', 'tas-blue', 'tas-black', 'tas-orange'];
         for(let i=0; i<22; i++) {
             let num = Math.floor(Math.random() * 13) + 1;
-            let color = colors[Math.floor(Math.random() * colors.length)];
-            istaka.innerHTML += `<div class="tas" style="color:${color}">${num}</div>`;
+            let col = colors[Math.floor(Math.random() * 4)];
+            istaka.innerHTML += `<div class="tas ${col}">${num}</div>`;
         }
     }
-    // Temel buton fonksiyonları (Yarın içleri dolacak)
-    function seriAc() { alert("101 Kontrolü yapılıyor..."); }
-    function ciftAc() { alert("Çift Kontrolü yapılıyor..."); }
-    function tasAl() { alert("Yerden taş çektin."); }
-    function tasAt() { alert("Taş yere atıldı."); }
-    function seriDiz() { alert("Taşlar otomatik diziliyor..."); dagit(); }
-</script>
 
+    // --- HİLE SAVAR VE KURALLAR ---
+    function seriAc() {
+        alert("🛡️ Hile Savar Aktif: Elin 101 olup olmadığı kontrol ediliyor...");
+        // Burada yarın matematiksel kontrolü ekleyeceğiz
+    }
+
+    function formatNumber(num) {
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(0) + 'K';
+        return num.toLocaleString();
+    }
+
+    function updateUI() {
+        document.getElementById('lobby-chips').innerText = formatNumber(currentChips);
+        document.getElementById('game-chips').innerText = formatNumber(currentChips);
+    }
+</script>
 </body>
-</html>
+                </html>
+                    
