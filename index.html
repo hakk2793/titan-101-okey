@@ -2,98 +2,135 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titan 101 Okey - Professional Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Titan Casino - Ultimate Design</title>
+    <script src="https://sad.adsgram.ai/js/adstg.js"></script>
     <style>
-        :root { --gold: #FFD700; --blue: #00BFFF; --bg: #0b0f19; --card-bg: #161b28; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        :root { --gold: #FFD700; --blue: #00d2ff; --dark: #050a12; }
         
+        body { 
+            background: radial-gradient(circle at center, #0a192f 0%, #000 100%);
+            color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
         /* ÜST PANEL */
-        .top-bar { display: flex; justify-content: space-between; padding: 15px; background: rgba(0,0,0,0.8); border-bottom: 2px solid var(--gold); }
-        .stat-box { background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--gold); display: flex; align-items: center; gap: 8px; }
+        .top-nav {
+            width: 100%; background: rgba(0,0,0,0.9); padding: 12px 0;
+            border-bottom: 2px solid var(--gold); text-align: center;
+        }
+        .stats-grid { display: flex; justify-content: center; gap: 20px; font-size: 1.2em; font-weight: bold; }
+        .vip-banner { 
+            margin-top: 5px; color: var(--gold); font-size: 0.8em; 
+            text-transform: uppercase; letter-spacing: 2px;
+        }
 
-        /* ODA SEÇİMİ (FOTOĞRAFTAKİ GİBİ) */
-        .room-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; margin-top: 20px; }
-        .room-card { background: var(--card-bg); border: 2px solid #333; border-radius: 15px; padding: 20px; text-align: center; position: relative; transition: 0.3s; cursor: pointer; }
-        .room-card:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .room-card.vip { border-color: #ff007f; }
-        .badge { position: absolute; top: -10px; right: -5px; background: #ff007f; padding: 3px 10px; border-radius: 8px; font-size: 12px; }
-        .entry-fee { color: #39FF14; font-weight: bold; font-size: 1.2em; }
+        /* TİTAN MEKANİZMASI (DİŞLİ ÇARKLAR) */
+        .titan-engine {
+            position: relative; width: 360px; height: 360px; margin: 25px auto;
+            border-radius: 50%;
+            /* Dişli çark efekti */
+            box-shadow: 0 0 0 15px #1a1a1a, 0 0 0 25px #222, 0 0 50px rgba(0,210,255,0.2);
+        }
 
-        /* MARKET MODAL */
-        #market-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: none; flex-direction: column; }
-        .market-header { display: flex; background: #1a237e; padding: 15px; }
-        .market-tab { padding: 10px 30px; cursor: pointer; border-bottom: 3px solid transparent; }
-        .market-tab.active { border-color: var(--gold); background: rgba(255,255,255,0.1); }
-        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 20px; overflow-y: auto; }
-        .item-card { background: #252a34; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #444; }
+        /* ALTIN OK */
+        .golden-arrow {
+            position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 22px solid transparent; border-right: 22px solid transparent;
+            border-top: 50px solid var(--gold); z-index: 100;
+            filter: drop-shadow(0 0 15px var(--gold));
+        }
 
-        .btn-buy { background: #39FF14; color: black; border: none; padding: 8px; width: 100%; border-radius: 5px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-        .btn-close { background: #ff3d00; color: white; border: none; padding: 15px; width: 100%; font-weight: bold; }
+        #wheel { 
+            width: 320px; height: 320px; border-radius: 50%; border: 10px solid #333;
+            position: absolute; top: 10px; left: 10px;
+            background: conic-gradient(
+                #8b0000 0deg 45deg, #111 45deg 90deg, #8b0000 90deg 135deg, #111 135deg 180deg,
+                #8b0000 180deg 225deg, #111 225deg 270deg, #8b0000 270deg 315deg, #111 315deg 360deg
+            );
+            transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
+        }
+
+        .x-text {
+            position: absolute; width: 60px; top: 35px; left: calc(50% - 30px);
+            font-weight: 900; font-size: 1.6em; color: var(--gold);
+            text-shadow: 2px 2px 4px #000; transform-origin: center 125px; text-align: center;
+        }
+
+        /* BUTONLAR */
+        .btns { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .btn {
+            width: 85%; padding: 18px; border-radius: 12px; font-weight: 900;
+            font-size: 1.2em; border: none; cursor: pointer; text-transform: uppercase;
+        }
+        .btn-spin { background: linear-gradient(180deg, #FFD700, #B8860B); color: #000; box-shadow: 0 4px 15px rgba(218,165,32,0.5); }
+        .btn-ads { background: linear-gradient(180deg, #00d2ff, #3a7bd5); color: #fff; box-shadow: 0 4px 15px rgba(0,210,255,0.5); }
     </style>
 </head>
 <body>
 
-    <div id="lobby">
-        <div class="top-bar">
-            <div class="stat-box">💰 <span id="chips">260K</span></div>
-            <div class="stat-box">💎 <span id="diamonds">10</span></div>
-            <div class="stat-box" onclick="toggleMarket()" style="cursor:pointer">🛒 MARKET</div>
+    <div class="top-nav">
+        <div class="stats-grid">
+            <span>💰 <span id="bal">250.000</span></span>
+            <span style="color:var(--blue)">💎 10</span>
         </div>
+        <div class="vip-banner">👑 VIP ÜRETİM: 10.000 ÇİP / SN</div>
+    </div>
 
-        <div class="room-container">
-            <div class="room-card" onclick="startLoading()">
-                <span class="badge" style="background:#ff3d00">Yeni</span>
-                <h3>Acemi</h3>
-                <p class="entry-fee">20K</p>
-            </div>
-            <div class="room-card">
-                <span class="badge" style="background:#00BFFF">Popüler</span>
-                <h3>Kalfa</h3>
-                <p class="entry-fee">100K</p>
-            </div>
-            <div class="room-card vip">
-                <span class="badge">VIP</span>
-                <h3>Usta</h3>
-                <p class="entry-fee">500K</p>
-            </div>
-            <div class="room-card">
-                <span class="badge" style="background:#FFD700">Kral</span>
-                <h3>Efsane</h3>
-                <p class="entry-fee">2.0M</p>
-            </div>
-        </div>
-
-        <div style="text-align:center; margin-top: 30px;">
-            <button onclick="startLoading()" style="background:#39FF14; padding: 20px 80px; border-radius: 50px; font-size: 1.5em; border:none; font-weight:bold; cursor:pointer; box-shadow: 0 0 20px #39FF14;">HIZLI BAŞLAT</button>
+    <div class="titan-engine">
+        <div class="golden-arrow"></div>
+        <div id="wheel">
+            <div class="x-text" style="transform: rotate(22.5deg)">X10</div>
+            <div class="x-text" style="transform: rotate(67.5deg)">X5</div>
+            <div class="x-text" style="transform: rotate(112.5deg)">X3</div>
+            <div class="x-text" style="transform: rotate(157.5deg)">X10</div>
+            <div class="x-text" style="transform: rotate(202.5deg)">X0</div>
+            <div class="x-text" style="transform: rotate(247.5deg)">X20</div>
+            <div class="x-text" style="transform: rotate(292.5deg)">X1</div>
+            <div class="x-text" style="transform: rotate(337.5deg)">X15</div>
         </div>
     </div>
 
-    <div id="market-ui">
-        <div class="market-header">
-            <div class="market-tab active">ÇİP</div>
-            <div class="market-tab">ELMAS</div>
-            <div class="market-tab">ÜRÜN</div>
-            <div class="market-tab">KUPON</div>
-        </div>
-        <div class="market-grid">
-            <div class="item-card"><h4>5M Çip</h4><p>49.99 TL</p><button class="btn-buy">AL</button></div>
-            <div class="item-card"><h4>20M Çip</h4><p>149.99 TL</p><button class="btn-buy">AL</button></div>
-            <div class="item-card"><h4>100M Çip</h4><p>499.99 TL</p><button class="btn-buy">AL</button></div>
-            <div class="item-card" style="border-color:var(--blue)"><h4>10 Elmas</h4><p>REKLAM</p><button class="btn-buy" style="background:var(--blue)">İZLE</button></div>
-        </div>
-        <button class="btn-close" onclick="toggleMarket()">KAPAT</button>
+    <div class="btns">
+        <button class="btn btn-spin" onclick="startSpin()">ÇARKTI ÇEVİR (-50K)</button>
+        <button class="btn btn-ads" onclick="showAd()">📺 REKLAM İZLE (+100K)</button>
     </div>
 
     <script>
-        function toggleMarket() {
-            const m = document.getElementById('market-ui');
-            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        let balance = 250000;
+        let rot = 0;
+        const prizeMap = [10, 5, 3, 10, 0, 20, 1, 15];
+
+        function startSpin() {
+            if(balance < 50000) return alert("Yetersiz bakiye!");
+            balance -= 50000;
+            updateUI();
+
+            let idx = Math.floor(Math.random() * 8);
+            let stopAt = (idx * 45) + 22.5; 
+            rot += (360 * 5) + (360 - stopAt); 
+            
+            document.getElementById('wheel').style.transform = `rotate(${rot}deg)`;
+
+            setTimeout(() => {
+                let win = 50000 * prizeMap[idx];
+                balance += win;
+                updateUI();
+                alert(prizeMap[idx] > 0 ? "TİTAN GÜCÜ! " + win.toLocaleString() + " Kazandın!" : "KAYBETTİN!");
+            }, 5100);
         }
 
-        function startLoading() {
-            alert("Odaya bağlanılıyor... Lütfen bekleyin.");
-            // Burada gerçek oyun sahnesine (Phaser motoruna) geçiş yapılacak
+        function showAd() {
+            if (!window.Adsgram) return alert("Lütfen GitHub linkinizden girin.");
+            const AdController = window.Adsgram.init({ blockId: "22286" });
+            AdController.show().then(() => {
+                balance += 100000;
+                updateUI();
+            });
+        }
+
+        function updateUI() {
+            document.getElementById('bal').innerText = balance.toLocaleString();
         }
     </script>
 </body>
