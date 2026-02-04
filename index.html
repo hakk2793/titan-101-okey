@@ -3,134 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Titan Casino - Ultimate Design</title>
+    <title>Titan Casino - APK Build</title>
     <script src="https://sad.adsgram.ai/js/adstg.js"></script>
     <style>
-        :root { --gold: #FFD700; --blue: #00d2ff; --dark: #050a12; }
+        :root { --gold: #FFD700; --dark-bg: #050a12; }
         
         body { 
-            background: radial-gradient(circle at center, #0a192f 0%, #000 100%);
-            color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden;
+            background: #000; /* APK içinde siyah en garantisidir */
+            color: white; font-family: sans-serif; margin: 0; overflow: hidden;
             display: flex; flex-direction: column; align-items: center;
         }
 
         /* ÜST PANEL */
-        .top-nav {
-            width: 100%; background: rgba(0,0,0,0.9); padding: 12px 0;
-            border-bottom: 2px solid var(--gold); text-align: center;
+        .panel {
+            width: 100%; background: #111; padding: 10px 0; border-bottom: 2px solid var(--gold);
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
         }
-        .stats-grid { display: flex; justify-content: center; gap: 20px; font-size: 1.2em; font-weight: bold; }
-        .vip-banner { 
-            margin-top: 5px; color: var(--gold); font-size: 0.8em; 
-            text-transform: uppercase; letter-spacing: 2px;
+        .bal-row { font-size: 1.3em; font-weight: bold; display: flex; gap: 20px; }
+        .vip-status { color: var(--gold); font-size: 0.8em; border: 1px dashed var(--gold); padding: 2px 10px; }
+
+        /* TİTAN ÇARK VE DİŞLİ MEKANİZMASI */
+        .engine-room {
+            position: relative; width: 350px; height: 350px; margin: 30px auto;
+            border: 8px solid #222; border-radius: 50%;
+            /* Arka plandaki o dişli havasını vermek için gölge katmanları */
+            box-shadow: 0 0 50px rgba(0, 210, 255, 0.1), inset 0 0 100px #000;
         }
 
-        /* TİTAN MEKANİZMASI (DİŞLİ ÇARKLAR) */
-        .titan-engine {
-            position: relative; width: 360px; height: 360px; margin: 25px auto;
-            border-radius: 50%;
-            /* Dişli çark efekti */
-            box-shadow: 0 0 0 15px #1a1a1a, 0 0 0 25px #222, 0 0 50px rgba(0,210,255,0.2);
-        }
-
-        /* ALTIN OK */
-        .golden-arrow {
-            position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; border-left: 22px solid transparent; border-right: 22px solid transparent;
-            border-top: 50px solid var(--gold); z-index: 100;
-            filter: drop-shadow(0 0 15px var(--gold));
+        /* ALTIN OK İŞARETİ */
+        .arrow-top {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent;
+            border-top: 45px solid var(--gold); z-index: 100; filter: drop-shadow(0 0 10px var(--gold));
         }
 
         #wheel { 
-            width: 320px; height: 320px; border-radius: 50%; border: 10px solid #333;
-            position: absolute; top: 10px; left: 10px;
+            width: 300px; height: 300px; border-radius: 50%; border: 5px solid #333;
+            position: absolute; top: 20px; left: 20px;
             background: conic-gradient(
-                #8b0000 0deg 45deg, #111 45deg 90deg, #8b0000 90deg 135deg, #111 135deg 180deg,
-                #8b0000 180deg 225deg, #111 225deg 270deg, #8b0000 270deg 315deg, #111 315deg 360deg
+                #900 0deg 45deg, #111 45deg 90deg, #900 90deg 135deg, #111 135deg 180deg,
+                #900 180deg 225deg, #111 225deg 270deg, #900 270deg 315deg, #111 315deg 360deg
             );
             transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
         }
 
-        .x-text {
-            position: absolute; width: 60px; top: 35px; left: calc(50% - 30px);
-            font-weight: 900; font-size: 1.6em; color: var(--gold);
-            text-shadow: 2px 2px 4px #000; transform-origin: center 125px; text-align: center;
+        .x-tag {
+            position: absolute; width: 60px; top: 30px; left: calc(50% - 30px);
+            font-weight: 900; font-size: 1.5em; color: var(--gold);
+            text-shadow: 2px 2px 4px #000; transform-origin: center 120px; text-align: center;
         }
 
         /* BUTONLAR */
-        .btns { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .btn-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .btn {
-            width: 85%; padding: 18px; border-radius: 12px; font-weight: 900;
-            font-size: 1.2em; border: none; cursor: pointer; text-transform: uppercase;
+            width: 85%; padding: 18px; border-radius: 10px; font-weight: bold; font-size: 1.1em;
+            border: none; cursor: pointer; text-transform: uppercase;
         }
-        .btn-spin { background: linear-gradient(180deg, #FFD700, #B8860B); color: #000; box-shadow: 0 4px 15px rgba(218,165,32,0.5); }
-        .btn-ads { background: linear-gradient(180deg, #00d2ff, #3a7bd5); color: #fff; box-shadow: 0 4px 15px rgba(0,210,255,0.5); }
+        .btn-spin { background: linear-gradient(to bottom, #FFD700, #B8860B); color: black; }
+        .btn-ads { background: linear-gradient(to bottom, #00d2ff, #0066cc); color: white; }
     </style>
 </head>
 <body>
 
-    <div class="top-nav">
-        <div class="stats-grid">
-            <span>💰 <span id="bal">250.000</span></span>
-            <span style="color:var(--blue)">💎 10</span>
+    <div class="panel">
+        <div class="bal-row">
+            <span>💰 <span id="chipsDisplay">250.000</span></span>
+            <span style="color:#00d2ff">💎 10</span>
         </div>
-        <div class="vip-banner">👑 VIP ÜRETİM: 10.000 ÇİP / SN</div>
+        <div class="vip-status">👑 VIP ÜRETİM: 10.000 ÇİP / SN</div>
     </div>
 
-    <div class="titan-engine">
-        <div class="golden-arrow"></div>
+    <div class="engine-room">
+        <div class="arrow-top"></div>
         <div id="wheel">
-            <div class="x-text" style="transform: rotate(22.5deg)">X10</div>
-            <div class="x-text" style="transform: rotate(67.5deg)">X5</div>
-            <div class="x-text" style="transform: rotate(112.5deg)">X3</div>
-            <div class="x-text" style="transform: rotate(157.5deg)">X10</div>
-            <div class="x-text" style="transform: rotate(202.5deg)">X0</div>
-            <div class="x-text" style="transform: rotate(247.5deg)">X20</div>
-            <div class="x-text" style="transform: rotate(292.5deg)">X1</div>
-            <div class="x-text" style="transform: rotate(337.5deg)">X15</div>
+            <div class="x-tag" style="transform: rotate(22.5deg)">X10</div>
+            <div class="x-tag" style="transform: rotate(67.5deg)">X5</div>
+            <div class="x-tag" style="transform: rotate(112.5deg)">X3</div>
+            <div class="x-tag" style="transform: rotate(157.5deg)">X10</div>
+            <div class="x-tag" style="transform: rotate(202.5deg)">X0</div>
+            <div class="x-tag" style="transform: rotate(247.5deg)">X20</div>
+            <div class="x-tag" style="transform: rotate(292.5deg)">X1</div>
+            <div class="x-tag" style="transform: rotate(337.5deg)">X15</div>
         </div>
     </div>
 
-    <div class="btns">
-        <button class="btn btn-spin" onclick="startSpin()">ÇARKTI ÇEVİR (-50K)</button>
-        <button class="btn btn-ads" onclick="showAd()">📺 REKLAM İZLE (+100K)</button>
+    <div class="btn-area">
+        <button class="btn btn-spin" onclick="spinWheel()">ÇARKTI ÇEVİR (-50K)</button>
+        <button class="btn btn-ads" onclick="watchAd()">📺 REKLAM İZLE (+100K)</button>
     </div>
 
     <script>
         let balance = 250000;
-        let rot = 0;
-        const prizeMap = [10, 5, 3, 10, 0, 20, 1, 15];
+        let rotation = 0;
+        const prizeValues = [10, 5, 3, 10, 0, 20, 1, 15];
 
-        function startSpin() {
-            if(balance < 50000) return alert("Yetersiz bakiye!");
+        // Otomatik artış senin isteğinle kapalı
+
+        function spinWheel() {
+            if(balance < 50000) return alert("Bakiye bitti!");
             balance -= 50000;
-            updateUI();
+            updateDisplay();
 
-            let idx = Math.floor(Math.random() * 8);
-            let stopAt = (idx * 45) + 22.5; 
-            rot += (360 * 5) + (360 - stopAt); 
+            let targetIdx = Math.floor(Math.random() * 8);
+            let stopDeg = (targetIdx * 45) + 22.5; 
+            rotation += (360 * 5) + (360 - stopDeg); 
             
-            document.getElementById('wheel').style.transform = `rotate(${rot}deg)`;
+            document.getElementById('wheel').style.transform = `rotate(${rotation}deg)`;
 
             setTimeout(() => {
-                let win = 50000 * prizeMap[idx];
-                balance += win;
-                updateUI();
-                alert(prizeMap[idx] > 0 ? "TİTAN GÜCÜ! " + win.toLocaleString() + " Kazandın!" : "KAYBETTİN!");
+                let won = 50000 * prizeValues[targetIdx];
+                balance += won;
+                updateDisplay();
+                alert(prizeValues[targetIdx] > 0 ? "KAZANDIN: " + won.toLocaleString() : "KAYBETTİN!");
             }, 5100);
         }
 
-        function showAd() {
-            if (!window.Adsgram) return alert("Lütfen GitHub linkinizden girin.");
+        function watchAd() {
+            if (!window.Adsgram) return alert("Reklam kütüphanesi hazır değil. APK içinde internet olduğundan emin olun.");
             const AdController = window.Adsgram.init({ blockId: "22286" });
             AdController.show().then(() => {
                 balance += 100000;
-                updateUI();
+                updateDisplay();
             });
         }
 
-        function updateUI() {
-            document.getElementById('bal').innerText = balance.toLocaleString();
+        function updateDisplay() {
+            document.getElementById('chipsDisplay').innerText = balance.toLocaleString();
         }
     </script>
 </body>
