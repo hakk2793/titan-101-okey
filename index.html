@@ -3,136 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Titan Casino - Birebir Görsel</title>
+    <title>Titan Casino</title>
     <script src="https://sad.adsgram.ai/js/adstg.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
+
+        /* ANA EKRAN - GÖRSELİN İSMİNİ BURADA GÜNCELLEDİM */
+        .game-screen {
+            position: relative; width: 100vw; height: 100vh;
+            background: url('1770191706758.png') no-repeat center center;
+            background-size: contain;
         }
 
-        /* ANA EKRAN - GÖRSELİN KENDİSİ */
-        .game-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            height: 100%;
-            /* Senin verdiğin görseli buraya arka plan yapıyoruz */
-            background-image: url('https://r.resimlink.com/9vD_S1.png');
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* ÇARKIN DÖNECEĞİ ŞEFFAF KATMAN */
-        .wheel-overlay {
-            position: absolute;
-            top: 51.5%; /* Görseldeki çarkın tam merkezi */
-            left: 50%;
+        /* ÇARKIN DÖNECEĞİ KATMAN */
+        .wheel-layer {
+            position: absolute; top: 51.5%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
+            width: 320px; height: 320px;
             z-index: 5;
         }
 
         #wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            /* Çarkın kendisi şeffaf, sadece X yazıları dönecek */
+            width: 100%; height: 100%; border-radius: 50%;
             transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
+            position: relative;
         }
 
-        .x-value {
-            position: absolute;
-            width: 60px;
-            top: 30px;
-            left: calc(50% - 30px);
-            font-size: 1.6em;
-            font-weight: 900;
-            color: #FFD700;
-            text-shadow: 2px 2px 10px #000;
-            transform-origin: center 120px;
-            text-align: center;
+        .x-text {
+            position: absolute; width: 60px; top: 35px; left: calc(50% - 30px);
+            font-family: 'Arial Black', sans-serif; font-weight: 900; font-size: 1.6em;
+            color: #FFD700; text-shadow: 2px 2px 10px #000;
+            transform-origin: center 125px; text-align: center;
         }
 
-        /* GÖRSELDEKİ BUTONLARIN ÜZERİNE GELECEK TIKLANABİLİR ALANLAR */
-        .btn-layer {
-            position: absolute;
-            width: 100%;
-            bottom: 5%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
+        /* GÖRÜNMEZ TIKLAMA ALANLARI */
+        .click-area {
+            position: absolute; bottom: 5%; width: 100%;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+            z-index: 10;
+        }
+        .invisible-btn {
+            width: 80%; height: 60px; background: rgba(0,0,0,0);
+            border: none; cursor: pointer;
         }
 
-        .hidden-btn {
-            width: 80%;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0); /* Görünmez ama tıklanabilir */
-            border: none;
-            cursor: pointer;
+        /* BAKİYE ALANI */
+        .balance-overlay {
+            position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
+            color: #FFD700; font-weight: bold; font-size: 1.3em; z-index: 10;
         }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <div style="position:absolute; top:45px; left:50%; transform:translateX(-50%); color:#FFD700; font-weight:bold; font-size:1.2em;">
-            💰 <span id="chips">950.000</span>
-        </div>
+    <div class="game-screen">
+        <div class="balance-overlay">💰 <span id="chipsDisplay">950.000</span></div>
 
-        <div class="wheel-overlay">
+        <div class="wheel-layer">
             <div id="wheel">
-                <div class="x-value" style="transform: rotate(22.5deg)">X5</div>
-                <div class="x-value" style="transform: rotate(67.5deg)">X3</div>
-                <div class="x-value" style="transform: rotate(112.5deg)">X10</div>
-                <div class="x-value" style="transform: rotate(157.5deg)">X0</div>
-                <div class="x-value" style="transform: rotate(202.5deg)">X1</div>
-                <div class="x-value" style="transform: rotate(247.5deg)">X15</div>
-                <div class="x-value" style="transform: rotate(292.5deg)">X10</div>
-                <div class="x-value" style="transform: rotate(337.5deg)">X1</div>
+                <div class="x-text" style="transform: rotate(22.5deg)">X5</div>
+                <div class="x-text" style="transform: rotate(67.5deg)">X3</div>
+                <div class="x-text" style="transform: rotate(112.5deg)">X10</div>
+                <div class="x-text" style="transform: rotate(157.5deg)">X0</div>
+                <div class="x-text" style="transform: rotate(202.5deg)">X1</div>
+                <div class="x-text" style="transform: rotate(247.5deg)">X15</div>
+                <div class="x-text" style="transform: rotate(292.5deg)">X10</div>
+                <div class="x-text" style="transform: rotate(337.5deg)">X1</div>
             </div>
         </div>
 
-        <div class="btn-layer">
-            <button class="hidden-btn" onclick="spinNow()" style="height: 60px;"></button> <button class="hidden-btn" onclick="watchAd()" style="height: 60px;"></button> </div>
+        <div class="click-area">
+            <button class="invisible-btn" onclick="spin()"></button> <button class="invisible-btn" onclick="watchAd()"></button> </div>
     </div>
 
     <script>
         let balance = 950000;
-        let rotation = 0;
-        const rewards = [5, 3, 10, 0, 1, 15, 10, 1];
+        let currentRotation = 0;
+        const prizeMap = [5, 3, 10, 0, 1, 15, 10, 1];
 
-        function spinNow() {
-            if(balance < 50000) return alert("Bakiye bitti!");
+        function spin() {
+            if(balance < 50000) return alert("Bakiye Yetersiz!");
             balance -= 50000;
             updateUI();
-
-            let target = Math.floor(Math.random() * 8);
-            rotation += (360 * 5) + (360 - (target * 45 + 22.5));
-            document.getElementById('wheel').style.transform = `rotate(${rotation}deg)`;
+            
+            let targetIdx = Math.floor(Math.random() * 8);
+            currentRotation += (360 * 5) + (360 - (targetIdx * 45 + 22.5));
+            document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
 
             setTimeout(() => {
-                balance += (50000 * rewards[target]);
+                balance += (50000 * prizeMap[targetIdx]);
                 updateUI();
-                if(rewards[target] > 0) alert("KAZANDIN!");
+                if(prizeMap[targetIdx] > 0) alert("Tebrikler!");
             }, 5100);
         }
 
         function watchAd() {
+            if(!window.Adsgram) return alert("Reklam sistemi hazır değil.");
             const AdController = window.Adsgram.init({ blockId: "22286" });
             AdController.show().then(() => { balance += 100000; updateUI(); });
         }
 
         function updateUI() {
-            document.getElementById('chips').innerText = balance.toLocaleString();
+            document.getElementById('chipsDisplay').innerText = balance.toLocaleString();
         }
     </script>
 </body>
